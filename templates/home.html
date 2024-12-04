@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - School Admission System{% endblock %}
+
+{% block content %}
+<div class="p-8 space-y-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-8">School Admission System Dashboard</h1>
+
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- Total Applications Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-gray-500">Total Applications</h3>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-bold">{{ total_applications }}</div>
+            <p class="text-xs text-gray-500 mt-1">Across all programs</p>
+        </div>
+
+        <!-- Pending Review Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-gray-500">Pending Review</h3>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-bold">{{ pending_count }}</div>
+            <p class="text-xs text-gray-500 mt-1">Applications awaiting decision</p>
+        </div>
+
+        <!-- Acceptance Rate Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-gray-500">Acceptance Rate</h3>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-bold">{{ acceptance_rate }}%</div>
+            <p class="text-xs text-gray-500 mt-1">Overall acceptance rate</p>
+        </div>
+    </div>
+
+    <!-- Test Scores and Actions Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Test Score Averages Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Test Score Averages</h3>
+            <div class="space-y-4">
+                {% for test in test_averages %}
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-gray-600">{{ test.test_name }}</span>
+                    <span class="text-sm font-bold">{{ "%.1f"|format(test.avg_score) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+            <div class="space-y-4">
+                <a href="{{ url_for('view_applicants') }}" class="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <span class="text-sm font-medium text-gray-600">View All Applicants</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="{{ url_for('add_applicant') }}" class="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <span class="text-sm font-medium text-gray-600">Add New Applicant</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="{{ url_for('view_test_scores') }}" class="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <span class="text-sm font-medium text-gray-600">Manage Test Scores</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications by Program Chart -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">Applications by Program</h3>
+        <div class="h-80" id="programChart"></div>
+    </div>
+</div>
+
+<!-- Add Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the canvas element
+        const canvas = document.createElement('canvas');
+        document.getElementById('programChart').appendChild(canvas);
+
+        // Fetch data and create chart
+        fetch('/api/program_stats')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received data:', data); // Debug log
+
+                const ctx = canvas.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.map(item => item.name),
+                        datasets: [
+                            {
+                                label: 'Total Applications',
+                                data: data.map(item => item.total),
+                                backgroundColor: '#818cf8',
+                            },
+                            {
+                                label: 'Accepted',
+                                data: data.map(item => item.accepted),
+                                backgroundColor: '#4ade80',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error loading chart data:', error);
+                document.getElementById('programChart').innerHTML =
+                    '<p class="text-red-500">Error loading chart data. Please try refreshing the page.</p>';
+            });
+    });
+</script>
+{% endblock %}

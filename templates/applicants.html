@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Applicants - School Admission System{% endblock %}
+{% block content %}
+<div class="p-8 space-y-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Applicants</h1>
+        <a href="{{ url_for('add_applicant') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+            Add New Applicant
+        </a>
+    </div>
+
+    <!-- Search Box -->
+    <form action="{{ url_for('search_applicants') }}" method="get" class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="max-w-xl">
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="name" name="name" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Search by name">
+            </div>
+            <div class="mb-4">
+                <label for="degree" class="block text-sm font-medium text-gray-700">Degree</label>
+                <input type="text" id="degree" name="degree" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Search by degree">
+            </div>
+            <div class="mb-4">
+                <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
+                <input type="text" id="year" name="year" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Search by year">
+            </div>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <!-- Applicants Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Degree</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for applicant in applicants %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ applicant.id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ applicant.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ applicant.contact_address }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ applicant.applied_degree }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ applicant.year_applied }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <form method="POST" action="{{ url_for('update_status', id=applicant.id) }}" class="space-y-2">
+                            <select name="status" class="text-sm rounded-full px-3 py-1 {% if applicant.status == 'accepted' %}bg-green-100 text-green-800{% elif applicant.status == 'rejected' %}bg-red-100 text-red-800{% else %}bg-yellow-100 text-yellow-800{% endif %} border-transparent">
+                                <option value="pending" {% if applicant.status == 'pending' or not applicant.status %}selected{% endif %}>Pending</option>
+                                <option value="accepted" {% if applicant.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                                <option value="rejected" {% if applicant.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                            <button type="submit" class="text-xs text-blue-600 hover:text-blue-800">Update</button>
+                        </form>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-3">
+                        <a href="{{ url_for('add_test_score', applicant_id=applicant.id) }}" class="text-blue-600 hover:text-blue-800">Add Score</a>
+                        <form action="{{ url_for('delete_applicant', id=applicant.id) }}" method="POST" class="inline">
+                            <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure you want to delete this applicant?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
