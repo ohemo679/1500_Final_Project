@@ -13,10 +13,23 @@ db_config = {
     'database': 'school_admissions'
 }
 
-# Home Route
-@app.route('/')
-def home():
+# Login Route
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        return redirect(url_for('home'))
+    return render_template('login.html')
+
+# Home Route
+# Default route redirects to login
+@app.route('/')
+def index():
+    return redirect(url_for('login'))
+
+# Home route (dashboard)
+@app.route('/home')
+def home():
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor(dictionary=True)
 
@@ -166,9 +179,10 @@ def add_test_score():
             # Validate score ranges
             score_ranges = {
                 'SAT': (400, 1600),
-                'TOEFL': (0, 120),
-                'GRE': (260, 340)
+                'ACT': (1, 36),
+                'GRE': (260, 340),
             }
+
 
             if test_name in score_ranges:
                 min_score, max_score = score_ranges[test_name]
