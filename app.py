@@ -7,10 +7,10 @@ app.secret_key = 'any_random_string'
 
 # Database Configuration
 db_config = {
-    'host': 'localhost',
-    'user': 'root',       # Replace with your MySQL username
-    'password': 'Misty0987$',   # Replace with your MySQL password
-    'database': 'school_admissions'
+    'host': config.MYSQL_HOST,
+    'user': config.MYSQL_USER,
+    'password': config.MYSQL_PASSWORD,
+    'database': config.MYSQL_DB
 }
 
 # Login Route
